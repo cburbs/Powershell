@@ -6,9 +6,11 @@ Try
 $source = "$Yoursharename\Office365\Office"
 $destold = "$Yoursharename\Office365\Old"
 $dest = "$Yoursharename\Office365\Old"
-write-infolog "***** Deleting files from OLD folder *****" -Verbose
+write-infolog ""
+write-infolog "***** Deleting files from OLD folder *****" 
 remove-Item -path $destold -force -exclude old -recurse -confirm:$false
 Start-Sleep -Seconds 20
+write-infolog ""
 write-infolog "*****Moving Office files to OLD folder*****" -Verbose
 Get-ChildItem -Path $SOURCE | Move-Item -Destination $DEST
 Get-ChildItem -Path $SOURCE -Recurse -Directory | Remove-Item -confirm $false 
@@ -40,6 +42,7 @@ $ODTXml = @"
     $ODTXml | Out-File "$downloadsodt\OSDUpdate.xml" -Encoding utf8 -Force
     
     if (!($XmlOnly)) {
+        write-infolog ""
         write-infolog "*****Downloading ... This may take a while *****" -Verbose
         
         Start-Process -FilePath "$OfficeODT" -ArgumentList "/download","`"$downloadsodt\OSDUpdate.xml`"" -Wait -NoNewWindow
