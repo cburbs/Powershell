@@ -1,12 +1,5 @@
 # Powershell
-A place for Powershell Scripts.
+These Scripts will autodownload software based of version it grabs from web vs txt file in share location.
+If they match no action taken. 
+If they don't it will download the latest version.
 
-Items I may be adding as I have time.
-
-Active Directory Scripts
-
-Microsoft Cloud Scripts
-
-Term Process Scripts
-
-Software Downloads
