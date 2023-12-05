@@ -22,13 +22,13 @@ $dest = "$Yoursharename\Office365\Old"
 #===================================================================================================
 # OfficeDownload
 #===================================================================================================
-    
 $DownloadsPath = "$Yoursharename\Office365"
 $OfficeODT = '$Yoursharename\Office365\ODT\setup.exe'
 $downloadsodt = '$Yoursharename\Office365\ODT'
 $ODTOfficeProduct = 'O365ProPlusRetail'
 $OfficeArch = '64'
 $LanguageId ="en-us"
+$Channel = "MonthlyEnterprise"
 
 ############################
 # Email IT Term Complete   #
