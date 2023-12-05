@@ -24,10 +24,11 @@ $downloadsodt = '$Yoursharename\Office365\ODT'
 $ODTOfficeProduct = 'O365ProPlusRetail'
 $OfficeArch = '64'
 $LanguageId ="en-us"
+$Channel = "MonthlyEnterprise"
 
 $ODTXml = @"
 <Configuration>
-<Add SourcePath="$DownloadsPath" OfficeClientEdition="$OfficeArch" Channel="MonthlyEnterprise">
+<Add SourcePath="$DownloadsPath" OfficeClientEdition="$OfficeArch" Channel="$Channel">
     <Product ID="$ODTOfficeProduct">
         <Language ID="$LanguageId" />
     </Product>
