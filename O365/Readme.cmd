@@ -37,3 +37,20 @@ $datasource = "$Yoursharename\Office365\Office\Data"
 $from
 $to
 $Mailserver
+
+
+
+###########################################
+Log file Example after it ran on 11/14/2023
+###########################################
+2023-11-15 05:33:51.330 -08:00 [INF] 
+2023-11-15 05:33:51.393 -08:00 [INF] ***** Checking for Patch Tuesday ******
+2023-11-15 05:33:51.408 -08:00 [INF] It's Wed after Patch Tuesday!
+2023-11-15 05:33:51.408 -08:00 [INF] Calling 0365 Download
+2023-11-15 05:33:51.424 -08:00 [INF] ***** Deleting files from OLD folder *****
+2023-11-15 05:34:11.721 -08:00 [INF] *****Moving Office files to OLD folder*****
+2023-11-15 05:34:31.893 -08:00 [INF] *****Downloading ... This may take a while *****
+2023-11-15 05:42:08.840 -08:00 [INF] ***** Download Completed! *****
+2023-11-15 05:42:08.996 -08:00 [INF] 
+2023-11-15 05:42:09.028 -08:00 [INF] ***** Email IT Download Complete ******
+
