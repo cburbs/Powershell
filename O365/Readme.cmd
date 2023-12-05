@@ -41,7 +41,7 @@ $Mailserver
 
 
 ###########################################
-Log file Example after it ran on 11/14/2023
+Log file Example after it ran on 11/15/2023
 ###########################################
 2023-11-15 05:33:51.330 -08:00 [INF] 
 2023-11-15 05:33:51.393 -08:00 [INF] ***** Checking for Patch Tuesday ******
