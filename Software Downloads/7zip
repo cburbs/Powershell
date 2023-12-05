@@ -1,1 +1,54 @@
+##### Some of this is taken from here https://www.boriskagan.net/how-to-crawl-websites-to-download-software-updates-with-powershell/ but I also had already done the scraping myself
+##### Will only download if the Local Version txt file is not the same as the Web Version found in the $foldername location.
+#### Can set $foldername for your location
+#### I manually added the txt file since I already knew what version was there
 
+
+    # SET VARIABLES
+    $initialURL = "http://www.7-zip.org/"
+    $folderName = "C:\Intel\7zip"
+    $filenamePrefix = "7zip64"
+    $filenameExtension = "msi"
+    $defaultVersion = "0"
+    ###############
+ 
+    # MIGHT NEED CUSTOMIZATION
+    $program = (Invoke-WebRequest -Uri (  $initialURL + 'download.html' )).Links | where-object { $_.href -like '*7z*-x64.msi' } | Select-Object -First 1 | Select-Object -ExpandProperty href
+    
+    $programVERSION = $program -replace("a/7z","") -replace("-x64.msi","")
+    $version = $programVersion + ".txt"
+    $programDOWNLOAD = $initialURL + $program
+    ####################################################
+    
+    # NO CHANGES NEEDED
+    $programFILENAME = "$folderName\$filenamePrefix-$programVERSION.$filenameExtension"
+    $programREAD = Get-ChildItem "$folderName\*.txt" -name  | Select-Object -First 1
+    if ($programREAD.length -eq 0) {
+        $programREADVERSION = "$defaultVersion"
+    } else {
+        $programREADVERSION = $programREAD -replace(".txt","")
+    }
+
+    downloadProgram $programREADVERSION $programVERSION $programDOWNLOAD $programFILENAME
+
+
+   function downloadProgram ($readVersion, $version, $download, $name) {
+    Write-Host "LOCAL VERSION: $readVersion"
+    Write-Host "WEB__ VERSION: $version"
+    Write-Host "LINK: $download"
+    Write-Host "FILENAME: $name"
+    Write-Host " "
+    if ($readVersion -lt $version) {
+        Write-Host "Newer Version Found Online!"
+        Read-Host "Press Enter to Download"
+        Import-Module BitsTransfer
+        $start_time = Get-Date
+        #Start-BitsTransfer -Source "$download" -Destination "$name"
+        Write-Output "Completed in: $((Get-Date).Subtract($start_time).Seconds) seconds"
+        Get-ChildItem -Path "$folderName\*.txt" | Rename-Item -newname "$version.txt"  #this will only change when there is a new version 
+     
+    } else {
+        Write-Host "No Newer Version Found."
+    }
+}
+ 
