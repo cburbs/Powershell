@@ -11,7 +11,7 @@ write-infolog "***** Deleting files from OLD folder *****"
 remove-Item -path $destold -force -exclude old -recurse -confirm:$false
 Start-Sleep -Seconds 20
 write-infolog ""
-write-infolog "*****Moving Office files to OLD folder*****" -Verbose
+write-infolog "***** Moving Office files to OLD folder *****" -Verbose
 Get-ChildItem -Path $SOURCE | Move-Item -Destination $DEST
 Get-ChildItem -Path $SOURCE -Recurse -Directory | Remove-Item -confirm $false 
 Start-Sleep -Seconds 20
@@ -43,7 +43,7 @@ $ODTXml = @"
     
     if (!($XmlOnly)) {
         write-infolog ""
-        write-infolog "*****Downloading ... This may take a while *****" -Verbose
+        write-infolog "***** Downloading ... This may take a while *****" -Verbose
         
         Start-Process -FilePath "$OfficeODT" -ArgumentList "/download","`"$downloadsodt\OSDUpdate.xml`"" -Wait -NoNewWindow
        
