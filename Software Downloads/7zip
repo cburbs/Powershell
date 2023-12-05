@@ -1,54 +1,116 @@
+
 ##### Some of this is taken from here https://www.boriskagan.net/how-to-crawl-websites-to-download-software-updates-with-powershell/ but I also had already done the scraping myself
 ##### Will only download if the Local Version txt file is not the same as the Web Version found in the $foldername location.
 #### Can set $foldername for your location
 #### I manually added the txt file since I already knew what version was there
 
 
-    # SET VARIABLES
-    $initialURL = "http://www.7-zip.org/"
-    $folderName = "C:\Intel\7zip"
-    $filenamePrefix = "7zip64"
-    $filenameExtension = "msi"
-    $defaultVersion = "0"
-    ###############
- 
-    # MIGHT NEED CUSTOMIZATION
-    $program = (Invoke-WebRequest -Uri (  $initialURL + 'download.html' )).Links | where-object { $_.href -like '*7z*-x64.msi' } | Select-Object -First 1 | Select-Object -ExpandProperty href
-    
-    $programVERSION = $program -replace("a/7z","") -replace("-x64.msi","")
-    $version = $programVersion + ".txt"
-    $programDOWNLOAD = $initialURL + $program
-    ####################################################
-    
-    # NO CHANGES NEEDED
-    $programFILENAME = "$folderName\$filenamePrefix-$programVERSION.$filenameExtension"
+########################################
+#Import all modules for script to work
+########################################
+Import-Module PoShLog
+import-module SendEmail
+
+########################################
+#Set Variables
+########################################
+
+#Gets name of script running
+$scriptName =  $MyInvocation.MyCommand.Name
+$script = $scriptname -replace(".ps1","")
+
+#Logfile Variables
+$logDate = Get-Date -format "M-dd-yyyy" #Date/time stamp
+$logpath = "C:\Tools\Logs"
+$Log = $logpath +  "\" + "$script" + ".txt"  #Creates the log file object
+
+# SET VARIABLES
+$initialURL = "https://7-zip.org/download.html"
+$folderName = "\\shared\files\InstallSource\7Zip"
+$filenamePrefix = "7zip-64"
+$filenameExtension = "msi"
+$defaultVersion = "0"
+
+
+
+#####Starts logger info
+New-Logger |
+    Set-MinimumLevel -Value Debug | # You can change this value later to filter log messages
+    # Here you can add as many sinks as you want - see https://github.com/PoShLog/PoShLog/wiki/Sinks for all available sinks
+    Add-SinkConsole -RestrictedToMinimumLevel Information|   # Tell logger to write log messages to console
+    Add-SinkFile -Path $log|  # Tell logger to write log messages into file
+
+Start-logger
+
+Download7zip
+########################################
+#Function Parse-Web
+########################################
+Function Download7zip{
+Try{
+Write-infolog "***** Parsing 7zip for download******"
+$program = (Invoke-WebRequest -Uri $initialURL).Links | where-object { $_.href -like '*7z*-x64.msi' } | Select-Object -First 1 | Select-Object -ExpandProperty href
+ Write-infolog "***** Replace $program ******"   
+$programVERSION = $program -replace("a/7z","") -replace("-x64.msi","")
+#$version = $programVersion + ".txt"
+ Write-infolog "***** Replace $initialURL ******"  
+$DOWNLOAD  = $initialURL -replace("download.html","") 
+$programDOWNLOAD = $Download + $program
+write-infolog "***** Getting download info $script ******"
+
+## NO CHANGES NEEDED
+    $programFILENAME = "$folderName\$filenamePrefix.$filenameExtension"
     $programREAD = Get-ChildItem "$folderName\*.txt" -name  | Select-Object -First 1
     if ($programREAD.length -eq 0) {
         $programREADVERSION = "$defaultVersion"
     } else {
         $programREADVERSION = $programREAD -replace(".txt","")
     }
+downloadProgram $programREADVERSION $programVERSION $programDOWNLOAD $programFILENAME
+}
+catch {Write-infolog "***** Error Downloading from 7-zip******"
+       
+       Write-WarningLog $_.Exception.message
+        $errorbody = "$_.Exception.message"
+        [string]$subject = "Parse-web Catch Error $script!"
+        Send-Email $errorbody $subject
+       
+       } #end Catch
+}
 
-    downloadProgram $programREADVERSION $programVERSION $programDOWNLOAD $programFILENAME
 
-
-   function downloadProgram ($readVersion, $version, $download, $name) {
+########################################
+#Function Download latest file
+########################################
+ function downloadProgram ($readVersion, $version, $download, $name){
+# Let's build the required download link
+Try {Write-infolog "***** Building $script download link******"
     Write-Host "LOCAL VERSION: $readVersion"
     Write-Host "WEB__ VERSION: $version"
     Write-Host "LINK: $download"
     Write-Host "FILENAME: $name"
-    Write-Host " "
-    if ($readVersion -lt $version) {
-        Write-Host "Newer Version Found Online!"
-        Read-Host "Press Enter to Download"
+if ($readVersion -lt $version) {
+        Write-infolog "Newer Version Found Online!"
         Import-Module BitsTransfer
         $start_time = Get-Date
-        #Start-BitsTransfer -Source "$download" -Destination "$name"
-        Write-Output "Completed in: $((Get-Date).Subtract($start_time).Seconds) seconds"
+        Get-ChildItem -Path $folderName *.msi | foreach { Remove-Item -Path $_.FullName }
+        Start-Sleep -Seconds 20
+        Start-BitsTransfer -Source "$download" -Destination "$name"
+        Write-infolog "Completed in: $((Get-Date).Subtract($start_time).Seconds) seconds"
         Get-ChildItem -Path "$folderName\*.txt" | Rename-Item -newname "$version.txt"  #this will only change when there is a new version 
      
     } else {
-        Write-Host "No Newer Version Found."
+        Write-infolog "No Newer Version Found."
     }
-}
- 
+
+
+#Invoke-WebRequest -Uri $DownloadUrl -OutFile $destination
+}# End Try
+Catch {Write-infolog "***** Error Downloading $script******"
+       Write-WarningLog $_.Exception.message
+        $errorbody = "$_.Exception.message"
+        [string]$subject = "Download Catch Error $script!"
+        Send-Email $errorbody $subject
+       }
+       }
+close-logger
