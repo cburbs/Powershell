@@ -6,6 +6,6 @@
 | col 3 is | right-aligned |    $1 |
 
 | Product | Connection Command | Disconnect Command | Show Status | Work with MFA |
-|---------|--------------------|--------------------||------------|---------------|
+|---------|--------------------|--------------------|------------|---------------|
 |Teams	  |Connect-MicrosoftTeams|Disconnect-MicrosoftTeams|       |               |	
 				
