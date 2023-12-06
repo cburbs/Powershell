@@ -1,3 +1,4 @@
+<p align="left">
 I have just started playing with Poshlog for better logging - https://github.com/PoShLog/PoShLog.
 
 Patch_Tuesday.ps1 script is run monthly on my Sched server in Task Scheduler. I have it run starting on day 6 through 17 as patch Tuesday for most months seems to fall in that range.
@@ -54,3 +55,4 @@ Log file Example after it ran on 11/15/2023
 2023-11-15 05:42:08.996 -08:00 [INF] 
 2023-11-15 05:42:09.028 -08:00 [INF] ***** Email IT Download Complete ******
 
+</p>
