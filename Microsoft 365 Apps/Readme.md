@@ -1,5 +1,3 @@
-<p align="left">
-I have just started playing with Poshlog for better logging - https://github.com/PoShLog/PoShLog.
 
 Patch_Tuesday.ps1 script is run monthly on my Sched server in Task Scheduler. I have it run starting on day 6 through 17 as patch Tuesday for most months seems to fall in that range.
 If it is the Wed after Patch Tuesday then the script calls on the O365_Download.ps1 script
