@@ -4,6 +4,6 @@ If they match no action taken.
 If they don't it will download the latest version.
 
 **Helpful Links:**
-https://learn.microsoft.com/en-us/powershell/module/exchange/get-adsite?view=exchange-ps
+- https://learn.microsoft.com/en-us/powershell/module/exchange/get-adsite?view=exchange-ps
 
 
