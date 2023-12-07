@@ -1,1 +1,46 @@
 
+ <#
+.Synopsis
+   Determines which scheduled tasks (if any) have failed in the last 30 minutes 
+   and sends an email listing those failures.
+.DESCRIPTION
+   Determines which scheduled tasks (if any) have failed in the last 30 minutes 
+   and sends an email listing those failures.
+.USAGE
+    Create a scheduled task that has three triggers.  
+    The triggers are on Task Scheduler log events 101, 103, and 202.
+    Be sure that the scheduled task is running under an account with 
+    enough credentials to read the log and to run this script, and 
+    is running whether or not that account is logged on.
+    Obviously, this script should be the action taken on trigger (program is
+    powershell.exe, this script path\filename as parameter)
+    Adjust the variables that begin with "$Email" below to be correct for your
+    environment.
+#>
+
+#$EmailUsername = "anonymous"
+#$EmailPassword = ConvertTo-SecureString -String "anonymous" -AsPlainText -Force
+Start-Transcript -path "c:\Scripts\Logs\$script.txt"
+
+$scriptName =  $MyInvocation.MyCommand.Name
+$script = $scriptname -replace(".ps1","")
+
+$EmailTo = "Email@Example.com"
+$EmailFrom = "Email@Example.com"
+$EmailSMTPServer = "Email@Example.com"
+
+$events = get-scheduledtask | where {$_.State -ne "Disabled"} | where {((Get-ScheduledTaskInfo $_).LastTaskResult -ne "0") -and ((Get-ScheduledTaskInfo $_).LastTaskResult -ne "267009") -and ((Get-ScheduledTaskInfo $_).LastRunTime -ge ((Get-Date).AddMinutes(-60)) -and ((Get-ScheduledTaskInfo $_).TaskPath -notlike "\Microsoft\*" )) -and $_.TaskName -notlike"User_Feed_Synchronization*"} | Select Taskpath, TaskName
+$count = ($events.TaskName).Count
+$EmailBody = ""
+if ($count -ge 1){
+    foreach ($event in $events){
+        $EmailBody = "" 
+        $FailedTaskMessage = "A scheduled task on $env:COMPUTERNAME has failed.`n`r Failed Task: " + $event.Taskpath + $event.TaskName  + " `n`r Also check C:\Scripts\Logs\Scriptname.txt for more info on $env:COMPUTERNAME"
+        $EmailBody = $EmailBody + $FailedTaskMessage 
+        #$EmailCredentials = New-Object System.Management.Automation.PSCredential($EmailUsername,$EmailPassword)
+        $EmailSubject = "A scheduled task on $env:COMPUTERNAME has failed: " + $event.TaskName
+        Write-Output $EmailBody
+        Send-MailMessage -To $EmailTo -From $EmailFrom -Subject $EmailSubject -SmtpServer $EmailSMTPServer -Body $EmailBody
+    }
+}
+Stop-Transcript
