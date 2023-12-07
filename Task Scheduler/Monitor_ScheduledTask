@@ -1,3 +1,5 @@
+#Original Script - http://randoltech.blogspot.com/2017/10/powershell-script-to-email-alert-if.html
+#I changed a few lines of code for my setup
 
  <#
 .Synopsis
