@@ -1,6 +1,7 @@
 Sentinelone Powershell scripts
 
-•	https://usea1-s1sy.sentinelone.net/api-doc/api-details?category=updates&api=download-agent-package
+**Links:**
+-	https://usea1-s1sy.sentinelone.net/api-doc/api-details?category=updates&api=download-agent-package
 
 **To obtain an API token:**
 - Log in to your SentinelOne Management Console as an administrator
