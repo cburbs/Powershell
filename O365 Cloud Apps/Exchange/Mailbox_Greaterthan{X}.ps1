@@ -1,7 +1,9 @@
-#PS Script looks for all Office licensed users that don't have MFA Enabled and if not empty send email to winadmins. 
+#PS Script Finds USERS mailboxes 90gb or larger and sends them an email alert.
 #Requires the following modules:
 #PS2HTMLTable (HTML Output)
 #ExchangeOnlineManagement (To connect to exchangeonline)
+
+#Sets log file name to name of script
 $scriptName =  $MyInvocation.MyCommand.Name
 $script = $scriptname -replace(".ps1","")
 
