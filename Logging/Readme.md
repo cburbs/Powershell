@@ -4,6 +4,7 @@
 - Start-Transcript
 - Using the Group Policy option Turn on PowerShell Transcription
 - PowerShell logging to the Windows Eventlog
+- Modules
 
 ***Install Modules:***
 - poshlog (https://github.com/PoShLog/PoShLog)
